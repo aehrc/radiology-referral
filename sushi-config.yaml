@@ -1,0 +1,52 @@
+id: au.csiro.aehrc.referral
+canonical: http://aehrc.csiro.au/fhir/radiology-referral
+name: RadiologyReferralBooking
+title: Radiology Referral and Booking IG
+description: FHIR Implementation Guide for the Connected Test Scenario 1 radiology referral workflow (discover, refer, triage, book, track). Builds on AU eRequesting 1.0.1.
+status: draft
+experimental: true
+version: 0.1.0
+license: CC0-1.0
+fhirVersion: 4.0.1
+copyrightYear: 2026+
+publisher:
+  name: CSIRO AEHRC
+  url: http://aehrc.csiro.au
+jurisdiction: urn:iso:std:iso:3166#AU
+language: en-AU
+extension:
+  - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm
+    valueInteger: 0
+
+dependencies:
+  hl7.fhir.au.base: 6.0.0
+  hl7.fhir.au.core: 2.0.0
+  hl7.fhir.au.ereq: 1.0.1
+
+menu:
+  Home: index.html
+  Workflow: workflow.html
+  Guidance: guidance.html
+  Artefacts: artifacts.html
+  Open Issues: open-issues.html
+
+pages:
+  index.md:
+    title: Home
+  workflow.md:
+    title: Workflow
+  guidance.md:
+    title: Guidance
+  open-issues.md:
+    title: Open Issues
+
+parameters:
+  path-expansion-params: '../../input/_resources/exp-params.json'
+  apply-contact: true
+  apply-jurisdiction: true
+  apply-publisher: true
+  apply-version: true
+  show-inherited-invariants: false
+  usage-stats-opt-out: true
+  excludemap: true
+  shownav: true

@@ -1,0 +1,12 @@
+/output
+/input-cache
+/node_modules
+/fsh-generated
+/temp
+/template
+/scratchpad-bits-n-pieces
+/.vscode
+fhir.schema.json
+.DS_Store
+.index.db
+.index.json

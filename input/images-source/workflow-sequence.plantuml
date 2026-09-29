@@ -1,0 +1,34 @@
+@startuml workflow-sequence
+!theme plain
+skinparam defaultFontName Arial
+skinparam sequenceParticipantBorderColor #2980B9
+skinparam sequenceParticipantBackgroundColor #EBF5FB
+
+actor "Referrer\n(Placer)" as ref
+participant "Provider Directory\n(HCPD)" as dir
+participant "Referral Server" as srv
+actor "Imaging Provider\n(Filler)" as fil
+
+== 1. Discover ==
+ref -> dir : search HealthcareService / Location /\nOrganization / PractitionerRole / Endpoint
+dir --> ref : searchset Bundle
+
+== 2. Refer ==
+ref -> srv : POST transaction Bundle\n(ServiceRequest + Group Task + Referral Task\n+ supporting info)
+srv --> ref : 200 OK
+
+== 3. Triage ==
+fil -> srv : GET Task?owner=<org>&status=requested\n&_include=Task:focus
+fil -> srv : PUT Task (accepted | rejected | on-hold)
+
+== 4. Publish availability ==
+fil -> srv : PUT Schedule, Slot (status=free)
+
+== 5. Book ==
+ref -> srv : GET Slot?schedule.actor=...&status=free
+ref -> srv : POST Appointment (proposed, basedOn, slot)
+fil -> srv : PUT Appointment (booked), Slot (busy),\nTask (in-progress / service-booked)
+
+== 6. Track ==
+ref -> srv : GET Task / Appointment\n(poll or subscribe)
+@enduml

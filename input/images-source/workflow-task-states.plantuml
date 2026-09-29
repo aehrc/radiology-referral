@@ -1,0 +1,21 @@
+@startuml workflow-task-states
+!theme plain
+skinparam defaultFontName Arial
+hide empty description
+
+[*] --> requested : referrer creates
+requested --> accepted : filler accepts
+requested --> rejected : filler rejects\n(statusReason)
+requested --> on_hold : query to referrer\n(statusReason)
+on_hold --> accepted
+accepted --> in_progress : Appointment booked\n(businessStatus = service-booked)
+in_progress --> completed : service performed /\nreport available
+requested --> cancelled : referrer withdraws
+accepted --> cancelled
+in_progress --> cancelled
+state "on-hold" as on_hold
+state "in-progress" as in_progress
+rejected --> [*]
+completed --> [*]
+cancelled --> [*]
+@enduml

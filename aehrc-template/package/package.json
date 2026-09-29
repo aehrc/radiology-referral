@@ -1,0 +1,12 @@
+{
+  "name" : "aehrc.fhir.template",
+  "type" : "fhir.template",
+  "license" : "CC0-1.0",
+  "version": "0.1.0",
+  "description" : "HL7 FHIR Template for use with AEHRC FHIR IGs",
+  "author" : "CSIRO AEHRC", 
+  "base" : "fhir.base.template",
+  "dependencies" : {
+    "fhir.base.template" : "current"
+  }
+}

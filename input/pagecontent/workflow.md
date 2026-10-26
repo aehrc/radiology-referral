@@ -16,6 +16,12 @@ This page describes the end-to-end radiology referral workflow. It is a strawman
 
 ### Steps
 
+#### 0. Publish availability (ongoing)
+
+The filler maintains a [Booking Schedule](StructureDefinition-booking-schedule.html) (`actor` → HealthcareService / Location) and [Booking Slots](StructureDefinition-booking-slot.html) (`status=free`), usually by syncing them from the RIS.
+
+This is not a step in any one referral. Slots are the service's capacity for every referrer, and they exist before a referral is raised and whatever its triage outcome. Triage controls whether and what to book (step 4), not whether Slots are published.
+
 #### 1. Discover an imaging service
 
 The referrer searches the provider directory for a suitable service and resolves the **Endpoint** of the receiving referral server.
@@ -27,6 +33,8 @@ GET [directory]/Endpoint?organization=<id>
 ```
 
 Search parameters depend on the directory's published API and are to be confirmed.
+
+Optionally, the referrer can check free Slots at this point to choose a provider that can meet the required timeframe (see step 4 for the query).
 
 #### 2. Create the referral
 
@@ -49,29 +57,32 @@ GET [ref]/Task?owner=Organization/<id>&status=requested&_include=Task:focus
 
 It updates the Referral Task (and Group Task) to `accepted`, `rejected` or `on-hold`, with a `statusReason` where needed (e.g. "contrast allergy – please confirm").
 
-#### 4. Publish availability
+Triage can narrow the service to book (for example, contrast versus non-contrast, a different protocol or modality, or urgency). Where it does, the filler records the triaged service on the ServiceRequest or in `Task.output` so that the booking step can use it.
 
-The filler maintains a [Booking Schedule](StructureDefinition-booking-schedule.html) (`actor` → HealthcareService / Location) and [Booking Slots](StructureDefinition-booking-slot.html) (`status=free`).
+#### 4. Book
+
+Booking follows triage. Two variants are supported (see [Open Issues](open-issues.html), #4).
+
+**Referrer books.** The referrer books only when the Referral Task is `accepted`. While the Task is `requested` or `on-hold`, it must not create an Appointment. It searches free Slots for the triaged service:
 
 ```
 GET [ref]/Slot?schedule.actor=HealthcareService/<id>&status=free&start=ge2026-10-01&service-type=<CT>
 ```
 
-#### 5. Book
+It then creates a [Referral Appointment](StructureDefinition-referral-appointment.html) with `status=proposed`, `basedOn` → ServiceRequest, `slot` → Slot and the patient as a participant. The filler then confirms or declines it:
 
-The referrer (or patient app) creates a [Referral Appointment](StructureDefinition-referral-appointment.html) with `status=proposed`, `basedOn` → ServiceRequest, `slot` → Slot and the patient as a participant. The filler confirms:
+| Outcome | Appointment | Slot | Referral Task / Group Task |
+|---|---|---|---|
+| Confirmed | `booked` | `busy` | `status=in-progress`, `businessStatus=service-booked` |
+| Declined (e.g. Slot does not suit the triaged service) | `cancelled` (with `cancelationReason`) | `free` | unchanged (`accepted`) |
 
-| Resource | Update |
-|---|---|
-| Appointment | `status=booked` |
-| Slot | `status=busy` |
-| Referral Task / Group Task | `status=in-progress`, `businessStatus=service-booked` |
+The filler should update the Appointment and Slot together so that two referrers cannot book the same Slot. It may also mark the Slot `busy-tentative` when the proposed Appointment arrives.
 
-Alternative: the filler books after triage and the referrer is only notified. See [Open Issues](open-issues.html).
+**Filler books.** After accepting, the filler creates the Appointment directly (`status=booked`), sets the Slot to `busy` and updates the Task as above. The referrer learns of the booking through tracking. In this variant, Slots do not need to be published to the shared server.
 
 **Cancel and rebook:** Appointment → `cancelled` (with `cancelationReason`), Slot → `free`, then a new Appointment is created against another Slot.
 
-#### 6. Track
+#### 5. Track
 
 The referrer polls (or subscribes to) the Task and Appointment and displays `status` and `businessStatus`.
 
@@ -90,6 +101,7 @@ The referrer polls (or subscribes to) the Task and Appointment and displays `sta
 | Slot published | – | `free` |
 | Booking requested | `proposed` / `pending` | `busy-tentative` (optional) |
 | Booking confirmed | `booked` | `busy` |
+| Booking declined by filler | `cancelled` | `free` |
 | Booking cancelled | `cancelled` | `free` |
 | Patient attended | `arrived` → `fulfilled` | `busy` |
 | Patient did not attend | `noshow` | `busy` |

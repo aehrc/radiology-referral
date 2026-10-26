@@ -9,9 +9,16 @@ participant "Provider Directory\n(HCPD)" as dir
 participant "Referral Server" as srv
 actor "Imaging Provider\n(Filler)" as fil
 
+== 0. Publish availability (ongoing) ==
+fil -> srv : PUT Schedule, Slot (status=free)
+note over srv, fil : Maintained continuously from the RIS,\nindependent of any referral
+
 == 1. Discover ==
 ref -> dir : search HealthcareService / Location /\nOrganization / PractitionerRole / Endpoint
 dir --> ref : searchset Bundle
+opt check capacity before choosing a provider
+  ref -> srv : GET Slot?schedule.actor=...&status=free
+end
 
 == 2. Refer ==
 ref -> srv : POST transaction Bundle\n(ServiceRequest + Group Task + Referral Task\n+ supporting info)
@@ -20,15 +27,21 @@ srv --> ref : 200 OK
 == 3. Triage ==
 fil -> srv : GET Task?owner=<org>&status=requested\n&_include=Task:focus
 fil -> srv : PUT Task (accepted | rejected | on-hold)
+ref -> srv : GET Task (poll or subscribe)
 
-== 4. Publish availability ==
-fil -> srv : PUT Schedule, Slot (status=free)
+== 4. Book ==
+alt Referrer books (Task.status = accepted)
+  ref -> srv : GET Slot?schedule.actor=...&status=free\n&service-type=<triaged service>
+  ref -> srv : POST Appointment (proposed, basedOn, slot)
+  alt filler confirms
+    fil -> srv : PUT Appointment (booked), Slot (busy),\nTask (in-progress / service-booked)
+  else filler declines
+    fil -> srv : PUT Appointment (cancelled, cancelationReason),\nSlot (free)
+  end
+else Filler books
+  fil -> srv : POST Appointment (booked), PUT Slot (busy),\nTask (in-progress / service-booked)
+end
 
-== 5. Book ==
-ref -> srv : GET Slot?schedule.actor=...&status=free
-ref -> srv : POST Appointment (proposed, basedOn, slot)
-fil -> srv : PUT Appointment (booked), Slot (busy),\nTask (in-progress / service-booked)
-
-== 6. Track ==
+== 5. Track ==
 ref -> srv : GET Task / Appointment\n(poll or subscribe)
 @enduml

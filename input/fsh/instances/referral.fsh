@@ -8,7 +8,7 @@ Usage:       #example
 * clinicalStatus = $condition-clinical#active
 * category = $condition-category#problem-list-item
 * code = $SCT#301717006 "Right upper quadrant pain"
-* subject = Reference(patient-sam-taylor)
+* subject = Reference(patient-jayson-humphries)
 * onsetDateTime = "2026-09-20"
 
 Instance:    observation-egfr
@@ -19,7 +19,7 @@ Usage:       #example
 * status = #final
 * category = $observation-category#laboratory
 * code = $LNC#98979-8 "Glomerular filtration rate [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI 2021)/1.73 sq M"
-* subject = Reference(patient-sam-taylor)
+* subject = Reference(patient-jayson-humphries)
 * effectiveDateTime = "2026-09-28"
 * valueQuantity = 78 'mL/min/{1.73_m2}' "mL/min/{1.73_m2}"
 
@@ -39,7 +39,7 @@ Usage:       #example
 * priority = #routine
 * code = $SCT#432370003 "CT of abdomen and pelvis with contrast"
 * code.text = "CT abdomen and pelvis with contrast"
-* subject = Reference(patient-sam-taylor)
+* subject = Reference(patient-jayson-humphries)
 * occurrencePeriod.start = "2026-09-29"
 * occurrencePeriod.end = "2026-10-13"
 * authoredOn = "2026-09-29T10:15:00+10:00"
@@ -65,7 +65,7 @@ Usage:       #example
 * intent = #order
 * priority = #routine
 * code = $task-code#fulfill
-* for = Reference(patient-sam-taylor)
+* for = Reference(patient-jayson-humphries)
 * authoredOn = "2026-09-29T10:15:00+10:00"
 * lastModified = "2026-09-30T09:00:00+10:00"
 * requester = Reference(practitionerrole-gp-alex-chen)
@@ -89,7 +89,7 @@ Usage:       #example
 * priority = #routine
 * code = $task-code#fulfill
 * focus = Reference(referral-ct-abdo-pelvis)
-* for = Reference(patient-sam-taylor)
+* for = Reference(patient-jayson-humphries)
 * authoredOn = "2026-09-29T10:15:00+10:00"
 * lastModified = "2026-09-30T09:00:00+10:00"
 * requester = Reference(practitionerrole-gp-alex-chen)

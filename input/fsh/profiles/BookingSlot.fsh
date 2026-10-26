@@ -8,7 +8,9 @@ Description:    "A bookable time interval on a Booking Schedule. Referrers (or p
 
 * identifier MS
 * serviceType MS
+* serviceType from https://healthterminologies.gov.au/fhir/ValueSet/service-type-1 (preferred) 
 * specialty MS
+* specialty from https://healthterminologies.gov.au/fhir/ValueSet/clinical-specialty-1 (preferred)
 * appointmentType MS
 * schedule MS
 * schedule only Reference(BookingSchedule)

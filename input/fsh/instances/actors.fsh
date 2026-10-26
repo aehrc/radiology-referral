@@ -3,27 +3,27 @@
 
 Alias: $PGN-SYSTEM = http://ns.electronichealth.net.au/id/hpio-scoped/order/1.0/8003621566684455
 
-Instance:    patient-sam-taylor
+Instance:    patient-jayson-humphries
 InstanceOf:  $AUeRequestingPatient
-Title:       "Patient – Sam Taylor"
-Description: "Example: Sam Taylor (CT abdomen/pelvis storyline)."
+Title:       "Patient – Jayson Humphries"
+Description: "Example: Jayson Humphries (CT abdomen/pelvis storyline). Demographics from the HL7 AU test data set (Patient humphries-jayson)."
 Usage:       #example
 * identifier[ihi].type = $v2-0203#NI "National unique individual identifier"
 * identifier[ihi].type.text = "IHI"
 * identifier[ihi].system = $IHI
-* identifier[ihi].value = "8003608833357361"
-* name.use = #usual
-* name.family = "Taylor"
-* name.given = "Sam"
+* identifier[ihi].value = "8003608333647253"
+* name.use = #official
+* name.family = "HUMPHRIES"
+* name.given = "Jayson"
 * telecom.system = #phone
-* telecom.value = "0491570006"
+* telecom.value = "0491572665"
 * telecom.use = #mobile
-* gender = #male
-* birthDate = "1968-03-14"
-* address.line = "12 Example St"
-* address.city = "Chermside"
-* address.state = "QLD"
-* address.postalCode = "4032"
+* gender = #other
+* birthDate = "1968-05-14"
+* address.line = "41 Queen St"
+* address.city = "Areyonga"
+* address.state = "NT"
+* address.postalCode = "0872"
 * address.country = "AU"
 
 Instance:    practitioner-alex-chen

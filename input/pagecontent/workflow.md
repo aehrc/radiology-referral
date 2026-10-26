@@ -26,13 +26,18 @@ This is not a step in any one referral. Slots are the service's capacity for eve
 
 The referrer searches the provider directory for a suitable service and resolves the **Endpoint** of the receiving referral server.
 
+- Get all CT services in Queensland and include locations and organisations. 
 ```
-GET [directory]/HealthcareService?service-type=<CT>&location.address-state=QLD
+GET [directory]/HealthcareService?service-type=310128004&location.address-state=QLD
       &_include=HealthcareService:location&_include=HealthcareService:organization
-GET [directory]/Endpoint?organization=<id>
 ```
 
-Search parameters depend on the directory's published API and are to be confirmed.
+- Get all locations near Chermside and include the endpoints
+```
+GET [directory]/Location?near=-27.385|153.031|0.5&_include=Location:endpoint
+```
+
+Search parameters depend on the directory's published API and are to be confirmed. HealthConnect Provider Directory provides a number of additional [search](https://implementer.digitalhealth.gov.au/fhir/hcpd/current/search-api.html) examples. 
 
 Optionally, the referrer can check free Slots at this point to choose a provider that can meet the required timeframe (see step 4 for the query).
 

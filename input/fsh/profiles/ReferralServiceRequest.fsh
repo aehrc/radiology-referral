@@ -28,7 +28,7 @@ Description:    "A referral from a referrer (placer) to a receiving service (fil
 
 * priority MS
 * code 1..1 MS
-* code ^short = "Service being referred for (e.g. imaging procedure)"
+* code ^short = "Service being referred for e.g. interventional imaging"
 * subject only Reference($AUeRequestingPatient)
 * subject MS
 * encounter MS

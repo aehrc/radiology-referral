@@ -2,7 +2,7 @@ id: au.csiro.aehrc.referral
 canonical: http://aehrc.csiro.au/fhir/radiology-referral
 name: RadiologyReferralBooking
 title: Radiology Referral and Booking IG
-description: FHIR Implementation Guide for the Connected Test Scenario 1 radiology referral workflow (discover, refer, triage, book, track). Builds on AU eRequesting 1.0.1.
+description: "FHIR Implementation Guide for the Connected Test Scenario 2A: radiology referral workflow (discover, refer, triage, book, track). Builds on AU eRequesting 1.0.1."
 status: draft
 experimental: true
 version: 0.1.0

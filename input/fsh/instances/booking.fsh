@@ -48,7 +48,7 @@ Usage:       #example
 * created = "2026-09-30"
 * basedOn = Reference(referral-ct-abdo-pelvis)
 * patientInstruction = "Fast for 4 hours before your scan. Arrive 30 minutes early."
-* participant[+].actor = Reference(patient-sam-taylor)
+* participant[+].actor = Reference(patient-jayson-humphries)
 * participant[=].status = #accepted
 * participant[+].actor = Reference(location-northside-imaging-chermside)
 * participant[=].status = #accepted

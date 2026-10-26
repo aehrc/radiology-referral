@@ -1,6 +1,6 @@
 # Radiology Referral and Booking IG
 
-FHIR R4 Implementation Guide for **Connected Test Scenario 1**: radiology referral with directory discovery, triage, booking and status tracking. Builds on **AU eRequesting 1.0.1**, AU Core 2.0.0 and AU Base 6.0.0.
+FHIR R4 Implementation Guide for **Connected Test Scenario 2A**: radiology referral with directory discovery, triage, booking and status tracking. Builds on **AU eRequesting 1.0.1**, AU Core 2.0.0 and AU Base 6.0.0.
 
 It adds:
 

@@ -1,0 +1,75 @@
+name: Build IG and publish to Pages
+
+# Builds the Implementation Guide with SUSHI + the HL7 IG Publisher and deploys
+# the rendered site to GitHub Pages. Gives a stable hosted build URL
+# (https://aehrc.github.io/radiology-referral/) without depending on the FHIR
+# community auto-builder.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; newer pushes supersede in-progress ones.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java (IG Publisher requires Java 17+)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Node (for SUSHI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install SUSHI
+        run: npm install -g fsh-sushi
+
+      - name: Run SUSHI
+        run: sushi .
+
+      - name: Download IG Publisher
+        run: |
+          mkdir -p input-cache
+          curl -L -o input-cache/publisher.jar \
+            https://github.com/HL7/fhir-ig-publisher/releases/latest/download/publisher.jar
+
+      - name: Build IG
+        run: java -jar input-cache/publisher.jar -ig .
+
+      - name: Upload Pages artifact
+        # Only the rendered site; publish from the built output/ directory.
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output
+
+  deploy:
+    # Deploy only for pushes to main — PRs build (above) but don't publish.
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

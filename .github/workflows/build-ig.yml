@@ -17,31 +17,39 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment; newer pushes supersede in-progress ones.
+# Serialise only Pages *deployments* per ref; PR builds run freely in parallel
+# and never cancel an in-progress run (that self-cancel broke the first attempt).
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Java (IG Publisher requires Java 17+)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
 
       - name: Set up Node (for SUSHI)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
 
       - name: Install SUSHI
         run: npm install -g fsh-sushi
+
+      - name: Set up Ruby + Jekyll (the IG Publisher shells out to Jekyll to render pages)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - name: Install Jekyll
+        run: gem install jekyll bundler
 
       - name: Run SUSHI
         run: sushi .
